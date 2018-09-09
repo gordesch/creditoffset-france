@@ -1,17 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>creditoffset</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but creditoffset doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" integrity="sha256-zIG416V1ynj3Wgju/scU80KAEWOsO5rRLfVyRDuOv7Q=" crossorigin="anonymous" />
+        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.4.0/firebase-ui-auth.css" />
+        <title>Credit Offset France</title>
+    </head>
+    <body class="no-js">
+
+        <h1>Credit Offset <span class="tag">France</span></h1>
+
+        <noscript>
+            <strong>Credit Offset FR nécessite Javascript pour fonctionner.</strong>
+        </noscript>
+
+        <div id="app">
+            <div class="columns">
+                <div class="column is-6 is-offset-3">
+                    <button class="button is-primary is-outlined is-fullwidth is-disabled" disabled>
+                        <div class="loader">
+                            <svg viewBox="0 0 32 32" width="32" height="32">
+                                <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <table class="table is-striped is-narrow is-hoverable is-fullwidth" id="showTable">
+                <thead>
+                <th>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input class="input" type="text" placeholder="Rechercher un film..." disabled>
+                            <span class="icon is-small is-left">
+                                <svg style="width:1rem;" aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                                </svg>
+                            </span>
+                        </p>
+                    </div>
+                </th>
+                <th>
+                    Pré-COS
+                </th>
+                <th>
+                    COS
+                </th>
+                </thead>
+                <tbody class="loading-overlay">
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                    <tr><td colspan="3">...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>Credit Offset France</strong>
+                </p>
+                <p>
+                    Informations fournies par tout plein de monde en France<br>
+                    Remerciements spéciaux à la communauté de <a href="http://www.projectionniste.net" target="_blank" rel="noopener">projectionniste.net</a>
+                </p>
+                <p>
+                    Application codée par
+                    <a href="https://twitter.com/@gordesch" target="_blank" rel="noopener">
+                        <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" style="position:relative;width:1rem;top:.125rem;margin-left:.25rem;" viewBox="0 0 512 512">
+                            <path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                        @gordesch
+                    </a><br>
+                    Libre de droits (<a href="https://unlicense.org/" target="_blank" rel="noopener">Licence Unlicense</a>)
+                </p>
+            </div>
+        </footer>
+
+        <style>
+            *, ::after, ::before {
+                box-sizing: border-box;
+            }
+
+            h1 {
+                font-size: 2rem;
+                font-weight: bold;
+                text-align: center;
+                margin-top: 3rem;
+                margin-bottom: 4rem;
+            }
+
+            #app {
+                color: hsl(210,29%,24%);
+                margin: 0 auto 3rem;
+                max-width: 40rem;
+            }
+
+            .container {
+                margin-bottom: 2rem;
+            }
+
+            .footer {
+                margin-top: 6rem;
+            }
+
+            .autocomplete {
+                position: relative;
+            }
+
+            .autocomplete .dropdown-menu {
+                display: block;
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .autocomplete .dropdown-menu.is-opened-top {
+                 top: auto;
+                 bottom: 100%;
+            }
+
+            .autocomplete .dropdown-content {
+                overflow: auto;
+                max-height: 200px;
+            }
+
+            .autocomplete .dropdown-item {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .autocomplete .dropdown-item.is-hovered {
+                 background: hsl(0, 0%, 96%);
+                 color: hsl(0, 0%, 4%);
+            }
+
+            .autocomplete .dropdown-item.is-disabled {
+                 opacity: 0.5;
+                 cursor: not-allowed;
+            }
+
+            thead {
+                background-color: hsl(210,29%,94%);
+            }
+
+            th:not(:first-child) {
+                width: 1rem;
+                vertical-align: middle;
+            }
+
+            th .field {
+                max-width: 18rem;
+                margin: .5rem;
+            }
+
+            td[colspan="3"] {
+                text-align: center;
+            }
+
+        </style>
+
+        <script src="https://www.gstatic.com/firebasejs/ui/3.4.0/firebase-ui-auth__fr.js"></script>
+
+    </body>
 </html>
