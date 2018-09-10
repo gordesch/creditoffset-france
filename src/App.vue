@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-        <div class="columns">
+        <div class="columns" style="margin-left:0;margin-right:0;">
             <div class="column is-6 is-offset-3">
                 <ShowAdd />
             </div>
