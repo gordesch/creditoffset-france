@@ -12,17 +12,20 @@
             <div class="modal-content box">
                 <button @click="toggleModal" class="modal-close is-large" aria-label="close"></button>
                 <form @submit.prevent="addShow(selected, precos, cos)" ref="addShowForm">
-                    <b-field label="Sélectionner un film">
+                    <b-field
+                            label="Sélectionner un film"
+                            :type="autocompleteState.type"
+                            :message="autocompleteState.message">
                         <b-autocomplete
                                 v-model="title"
-                                :data="data"
+                                :data="matchingShows"
                                 :keep-first="true"
                                 :open-on-focus="true"
                                 placeholder="Barbara"
                                 field="title"
                                 :loading="isFetching"
                                 @input="searchShows"
-                                @select="option => selected = option"
+                                @select="selectShow"
                                 autofocus>
 
                             <template slot-scope="props">
@@ -136,24 +139,40 @@
                 title: '',
                 precos: '',
                 cos: '',
+                matchingShows: [],
+                selected: null,
+                showExists: null,
+                isFetching: false,
                 activeModal: false,
                 cleaveOptions: {
                     time: true,
                     timePattern: ['m', 's']
                 },
-                data: [],
-                selected: null,
-                isFetching: false
             }
         },
         computed: {
             submitDisabled () {
-                if (this.selected === null) {
-                    return true
-                } else {
+                if (this.selected !== null && this.showExists === false) {
                     return false
                 }
-            }
+                return true
+            },
+            autocompleteState () {
+                if (this.selected !== null && this.showExists === true) {
+                    return {
+                        type: "is-danger",
+                        message:
+                            `<svg style="position:relative;width:1rem;top:.125rem;margin-left:.25rem;" aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path>
+                            </svg>
+                            Ce film existe déjà`
+                    }
+                }
+                return {
+                    type: null,
+                    message: null
+                }
+            },
         },
         methods: {
             addShow (show, precos, cos) {
@@ -164,16 +183,17 @@
                 precos = precos.substr(0, 2) + ":" + precos.substr(2, 2)
                 if (precos.length === 1) precos = ''
 
-                this.$root.$db.collection('shows').add({
-                    tmdbId: show.id,
-                    title: show.title,
-                    year: show.release_date.substring(0, 4),
-                    poster: show.poster_path,
-                    slug,
-                    precos,
-                    cos,
-                    modifiedAt
-                })
+                this
+                    .$root.$db.collection('shows').add({
+                        tmdbId: show.id,
+                        title: show.title,
+                        year: show.release_date.substring(0, 4),
+                        poster: show.poster_path,
+                        slug,
+                        precos,
+                        cos,
+                        modifiedAt
+                    })
                     .then(function(docRef) {
                         console.log("Document written with ID: ", docRef.id);
                     })
@@ -193,15 +213,16 @@
                     return
                 }
                 this.isFetching = true
-                axios.get(`https://api.themoviedb.org/3/search/movie?api_key=6b81aee3d60e680d5dbe2199e9184ec8&language=fr-FR&region=FR&query=${this.title}`)
+                axios
+                    .get(`https://api.themoviedb.org/3/search/movie?api_key=6b81aee3d60e680d5dbe2199e9184ec8&language=fr-FR&region=FR&query=${this.title}`)
                     .then(({ data }) => {
-                        this.data = []
-                        data.results.forEach((item) => this.data.push(item))
-                        this.data.forEach(function (item) {
+                        data.results.forEach(function (item) {
                             const date = new Date(item.release_date)
-                            const options = { weekday: undefined, year: 'numeric', month: 'long', day: '2-digit' };
+                            const options = { weekday: undefined, year: 'numeric', month: 'long', day: '2-digit' }
                             item.release_date_formatted = date.toLocaleDateString('fr-FR', options)
                         })
+                        this.matchingShows = []
+                        data.results.forEach((item) => this.matchingShows.push(item))
                     })
                     .catch((error) => {
                         this.data = []
@@ -211,6 +232,21 @@
                         this.isFetching = false
                     })
             }, 500),
+            selectShow (option) {
+                this.selected = option
+                if (this.selected !== null) {
+                    this.checkShowExists(this.selected.id)
+                }
+            },
+            checkShowExists (tmdbId) {
+                this
+                    .$root.$db.collection('shows').where('tmdbId', '==', tmdbId).get()
+                    .then((doc) => {
+                            console.log('Entry for this tmdbID:' + !doc.empty)
+                            this.showExists = !doc.empty;
+                        })
+                    .catch((error) => console.log(error))
+            }
         },
     }
 </script>
